@@ -12,7 +12,7 @@ in memory. But we should also consider small search systems, such as Spotlight
 search on your Mac or the equivalent Windows Search for Windows.
 
 **1.**
-Do standard Linux distribution provide a search engine for your computer?
+Do standard Linux distributions provide a search engine for your computer?
 Your Linux geek friend says that it's easy and that if you want to search for
 files with "apple" and "computer" in them, all you need to do is type:
 ```bash
@@ -31,6 +31,10 @@ If we want to provide a good text search system on a small machine:
    as "merge algorithms". The name is maybe misleading, since we sometimes, e.g.,
    intersect rather than merging lists, but the name is traditional.
  4. The secret to such algorithms being efficient is consistently *sorting* postings lists.
+ 
+ In this exercise, our postings lists are actually built in memory for simplicity, 
+ but we want to write algorithms that support this model of efficiently streaming postings lists 
+ from disk.
    
 **2.**
 Let's first write a simple routine to do an "AND" query – we intersect two postings lists.
@@ -69,8 +73,8 @@ Is it a good solution in terms of the criteria above? Why or why not?
 **3.** 
 Let's now write a solution using a merge algorithm.
 It'd be by far the best if you can just write your own merge algorithm for 
-postings list intersection from first principles,
-but if you can't remember what that's about, you could look at Figure 1.6
+postings list intersection from first principles!
+However, if you can't remember what that's about, you could look at Figure 1.6
 of the textbook. Check that your solution works on our test cases.
 
 **4.** 
@@ -78,30 +82,48 @@ Suppose we then wanted to do an "OR" algorithm to more truly "merge" postings li
 How would you modify your code in `Intersect.java` to do an "OR". 
 Try it out in `Or.java`.
  
+*~~~ If you have extra time before we move to positional indices, you can also do __7__ and __8__. ~~~*
+ 
 **5.** 
-It's pretty standard these days that you can answer not only finding documents that
+It's pretty standard these days that an IR system can answer not only finding documents that
 contain multiple words but that those words occur close by. The simplest case is
 phrase queries where we require them to be adjacent and ordered like ["machine learning"].
 A more complex form is "WITHIN k" queries which we write "/k".  For example, 
 the query [student /3 drunk] would match a document saying either "drunk student" or 
 "a student who is drunk" but not "the student said that the faculty member was drunk".
+Note that the algorithm should return **all** matches in the document, so that if document 7 is
+"a drunk student who is drunk", then the query [drunk /3 student] should return two maches for 
+this document: (7, 2, 3) and (7, 6, 3).
+
 We will augment our postings lists with the positions of each token within each document,
-numbering them as token 1, token 2, etc. Can we extend our postings list merge
-algorithms to work with positional postings lists? What's the general idea of how
-we might do that?
+numbering them as token 1, token 2, etc. How can we extend our postings list merge
+algorithms to work with positional postings lists? Try to work out an algorithm that will do that.
+We've provided a skeleton in the file `PositionalWithinK.java`. Try to write something that 
+passes the test cases provided there.  (**Note:** There is some code in Introduction to Information Retrieval
+for this algorithm, but we're _really_ wanting you to try to write it by yourself. This education thing is
+all about _learning_, right? Pretend that you're practicing for your Google coding interview.)
 
 **6.**
+Our document-level merge algorithm had some important properties. It worked using a single forward pass
+through a postings list, so it was suitable for applying to postings lists streamed from disk, so it could be both time efficient
+(linear in the length of the postings lists) and space efficient (the memory required does not depend on the size of the postings
+lists, since in the streaming scenario, you can just read and refill as needed a sliding buffer over the postings list,
+like standard buffered IO.  (As implemented here, it need only grow with the size of the set of matches.)
+Can these properties be maintained for doing a WITHIN k merge?  We think they can!  If that's not true of your solution, 
+try to rewrite it so that: (i) The algorithm makes a single always-forward pass through each postings list and (ii) 
+The memory required does not depend on the size of the input postings list, not even the size of the postings list
+for a single document (this is useful – some documents are very long!).
 
 
 *~~~ If you have extra time ~~~*
 
-**6.**
+**7.**
 Most search engines, including Google support a negation or "NOT" operation.
 For instance, search on Google for [space]. (That is search for the stuff inside the square brackets.)
 For negation, you precede a word with "-". Try searching on Google for [space -astronomy]. See how
 the results change. What should happen if you just search for a negation like [-astronomy]?  What 
 does happen? Is there a good reason why things might work the way they do?
 
-**7.**
+**8.**
 Can we write an efficient merge algorithm for "AND NOT" queries?
  Try it out in `AndNot.java`.
