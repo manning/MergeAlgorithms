@@ -43,7 +43,10 @@ We've provided in `Intersect.java` (in `src`) a skeleton for some code that load
 lists and tries to intersect pairs of them. Postings lists are semicolon-separated lists
 of document IDs, which you can pass in on the command-line or you can use our test cases.
 To get this code in Eclipse, do `File|Import` choose `Git|Projects from Git`, press `Next`,
-`Clone URI` then `Next`, then enter the HTTPS URI on this page, and `Next`, `Next`, `Next`
+`Clone URI` then `Next`, then enter the HTTPS URI on this page, and `Next`, `Next`, `Next`, 
+go with `Import existing projects`, `Next` and `Finish` – and you should be all ready to go!
+(The code uses the Java 7 diamond operator – if you last used Java in CS106A, then you do
+need to update to a more modern version of Eclipse.)
 
 Here's one potential solution:
 
