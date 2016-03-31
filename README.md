@@ -42,6 +42,9 @@ Let's first write a simple routine to do an "AND" query – we intersect two pos
 We've provided in `Intersect.java` (in `src`) a skeleton for some code that loads postings
 lists and tries to intersect pairs of them. Postings lists are semicolon-separated lists
 of document IDs, which you can pass in on the command-line or you can use our test cases.
+To get this code in Eclipse, do `File|Import` choose `Git|Projects from Git`, press `Next`,
+`Clone URI` then `Next`, then enter the HTTPS URI on this page, and `Next`, `Next`, `Next`
+
 Here's one potential solution:
 
 ```
