@@ -55,8 +55,8 @@ public class Intersect {
         "[335, 418, 466, 686]" },
   };
 
-  /** Stores the Posting for a single document: a docID and optionally a list of documen positions. */
-  static class Posting {
+  /** Stores the Posting for a single document: a docID and optionally a list of document positions. */
+  private static class Posting {
     final int docID;
     final List<Integer> positions;
     public Posting(int docID, List<Integer> positions) {
